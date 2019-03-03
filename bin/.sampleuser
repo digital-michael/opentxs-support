@@ -1,0 +1,6 @@
+# Optional: place in user's /home/ directory, named for the user
+# will override the defaults.
+# Keys with example values
+TOOLS=/home/dev/src/github/opentxs-build/bin
+SOURCES=/home/dev/src/github
+BUILDS=/home/dev/src/build

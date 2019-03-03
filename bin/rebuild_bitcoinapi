@@ -1,0 +1,22 @@
+#!/bin/bash
+
+set -e
+
+# load configuration realitive to this script
+SCRIPT=$(readlink -f $0)
+SCRIPTPATH=`dirname $SCRIPT`
+source "${SCRIPTPATH}/build"
+
+if [[ ! -d "${SOURCES}"/bitcoin-api-cpp ]] ; then
+	cd "${SOURCES}"
+	git clone -o github-stash ssh://git@github.com/Stash-Crypto/bitcoin-api-cpp.git
+	cd bitcoin-api-cpp
+	git reset --hard github-stash/master
+fi
+
+mkdir -p "${BUILDS}"/bitcoin-api-cpp
+cd "${BUILDS}"/bitcoin-api-cpp
+cmake -GNinja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER="${CMAKE_C_COMPILER}" -DCMAKE_CXX_COMPILER="${CMAKE_CXX_COMPILER}" -DJSONCPP_INCLUDE_DIRS=/usr/local/include "${SOURCES}"/bitcoin-api-cpp
+
+ninja
+sudo ninja install

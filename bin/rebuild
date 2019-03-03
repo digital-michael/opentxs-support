@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# load configuration realitive to this script
+SCRIPT=$(readlink -f $0)
+SCRIPTPATH=`dirname $SCRIPT`
+source "${SCRIPTPATH}/build"
+
+BIN_DIR="${TOOLS}"
+
+"${BIN_DIR}/rebuild_proto" &&
+"${BIN_DIR}/rebuild_opentxs" &&
+"${BIN_DIR}/rebuild_cli" &&
+"${BIN_DIR}/rebuild_notary" &&
+"${BIN_DIR}/rebuild_moneychanger" &&
+"${BIN_DIR}/rebuild_json" &&
+"${BIN_DIR}/rebuild_jsonrpc" &&
+"${BIN_DIR}/rebuild_bitcoinapi" &&
+"${BIN_DIR}/rebuild_agent" &&
+"${BIN_DIR}/rebuild_ctl" &&
+"${BIN_DIR}/rebuild_menadel"

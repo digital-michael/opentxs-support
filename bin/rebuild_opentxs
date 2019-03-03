@@ -1,0 +1,51 @@
+#!/bin/bash
+
+set -e
+
+# load configuration realitive to this script
+SCRIPT=$(readlink -f $0)
+SCRIPTPATH=`dirname $SCRIPT`
+source "${SCRIPTPATH}/build"
+
+if [[ ! -d "${SOURCES}"/opentxs ]] ; then
+	cd "${SOURCES}"
+	git clone -o github-ot -b develop ssh://git@github.com/open-transactions/opentxs.git
+	cd opentxs
+	git remote add gitlab-ot ssh://git@git.cjdns.stashcrypto.net/ot/opentxs.git
+fi
+
+sudo rm -rf /usr/local/include/opentxs
+mkdir -p "${BUILDS}"/opentxs
+cd "${BUILDS}"/opentxs
+cmake \
+ -GNinja \
+ -DCMAKE_BUILD_TYPE=Debug \
+ -DCMAKE_C_COMPILER="${CMAKE_C_COMPILER}" \
+ -DCMAKE_CXX_COMPILER="${CMAKE_CXX_COMPILER}" \
+ -DCMAKE_BUILD_TYPE=Debug \
+ -DOT_SHARED=ON \
+ -DOT_STATIC=ON \
+ -DOT_SANITIZE=OFF \
+ -DOT_CASH_USING_LUCRE=ON \
+ -DNO_PASSWORD=OFF \
+ -DOT_STORAGE_FS=ON \
+ -DOT_STORAGE_SQLITE=ON \
+ -DOT_STORAGE_LMDB=ON \
+ -DOT_DHT=ON \
+ -DOT_CRYPTO_SUPPORTED_KEY_RSA=ON \
+ -DJAVA=ON \
+ -DOT_CRYPTO_USING_LIBBITCOIN=OFF \
+ -DPYTHON=OFF \
+ -DOT_ZLIB_OVERRIDE=OFF \
+ -DOT_GENERATE_PROTO=ON \
+ -DOT_BUNDLED_PROTOBUF=OFF \
+ -DOT_BUNDLED_SODIUM=OFF \
+ -DOT_BUNDLED_SECP256K1=OFF \
+ -DOT_BUNDLED_SQLITE=OFF \
+ -DOT_BUNDLED_LIBZMQ=OFF \
+ -DOT_BUNDLED_OPENTXS_PROTO=OFF \
+ -DOT_BUNDLED_SSL=OFF \
+ -DOT_BUNDLED_LMDB=OFF \
+ "${SOURCES}"/opentxs
+ninja
+sudo ninja install

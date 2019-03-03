@@ -1,0 +1,22 @@
+#!/bin/bash
+
+set -e
+
+# load configuration realitive to this script
+SCRIPT=$(readlink -f $0)
+SCRIPTPATH=`dirname $SCRIPT`
+source "${SCRIPTPATH}/build"
+
+if [[ ! -d "${SOURCES}"/libjson-rpc-cpp ]] ; then
+	cd "${SOURCES}"
+	git clone https://github.com/cinemast/libjson-rpc-cpp.git
+	cd libjson-rpc-cpp
+	git reset --hard v1.1.0
+fi
+
+mkdir -p "${SOURCES}"/libjson-rpc-cpp
+cd "${SOURCES}"/libjson-rpc-cpp
+cmake -GNinja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER="${CMAKE_C_COMPILER}" -DCMAKE_CXX_COMPILER="${CMAKE_CXX_COMPILER}" -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF -DCOMPILE_EXAMPLES=OFF -DCOMPILE_STUBGEN=OFF -DCOMPILE_TESTS=OFF -DFILE_DESCRIPTOR_CLIENT=OFF -DFILE_DESCRIPTOR_SERVER=OFF -DHTTP_CLIENT=ON -DHTTP_SERVER=OFF -DHUNTER_ENABLED=OFF -DHUNTER_STATUS_DEBUG=OFF -DHUNTER_STATUS_PRINT=OFF -DREDIS_CLIENT=OFF -DREDIS_SERVER=OFF -DTCP_SOCKET_CLIENT=OFF -DTCP_SOCKET_SERVER=OFF -DUNIX_DOMAIN_SOCKET_CLIENT=OFF -DUNIX_DOMAIN_SOCKET_SERVER=OFF -DWITH_COVERAGE=OFF "${SOURCES}"/libjson-rpc-cpp
+
+ninja
+sudo ninja install

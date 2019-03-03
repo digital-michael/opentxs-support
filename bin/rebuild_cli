@@ -1,0 +1,24 @@
+#!/bin/bash
+
+set -e
+
+# load configuration realitive to this script
+SCRIPT=$(readlink -f $0)
+SCRIPTPATH=`dirname $SCRIPT`
+source "${SCRIPTPATH}/build"
+
+if [[ ! -d "${SOURCES}"/opentxs-cli ]] ; then
+	cd "${SOURCES}"
+	git clone -o github-ot -b develop ssh://git@github.com/open-transactions/opentxs-cli.git
+	cd opentxs-cli
+	git remote add gitlab-ot ssh://git@git.cjdns.stashcrypto.net/ot/opentxs-cli.git
+fi
+
+sudo rm -rf /usr/local/bin/opentxs
+mkdir -p "${BUILDS}"/opentxs-cli
+cd "${BUILDS}"/opentxs-cli
+
+cmake -GNinja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER="${CMAKE_C_COMPILER}" -DCMAKE_CXX_COMPILER="${CMAKE_CXX_COMPILER}" "${SOURCES}"/opentxs-cli
+
+ninja
+sudo ninja install

@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# load configuration realitive to this script
+SCRIPT=$(readlink -f $0)
+SCRIPTPATH=`dirname $SCRIPT`
+source "${SCRIPTPATH}/build"
+
+cd "${HOME}"/src/opentxs-proto
+git gui&
+cd "${HOME}"/src/opentxs
+git gui&
+cd "${HOME}"/src/opentxs-cli
+git gui&
+cd "${HOME}"/src/opentxs-notary
+git gui&
+cd "${HOME}"/src/moneychanger
+git gui&
+cd "${HOME}"/src/stash-node-manager
+git gui&
+cd "${HOME}"/src/tay
+git gui&
+cd "${HOME}"/src/otagent
+git gui&
+cd "${HOME}"/src/otctl
+git gui&
+
+cd "${HOME}"/src/opentxs-proto
+gitk&
+cd "${HOME}"/src/opentxs
+gitk&
+cd "${HOME}"/src/opentxs-cli
+gitk&
+cd "${HOME}"/src/opentxs-notary
+gitk&
+cd "${HOME}"/src/moneychanger
+gitk&
+cd "${HOME}"/src/stash-node-manager
+gitk&
+cd "${HOME}"/src/tay
+gitk&
+cd "${HOME}"/src/otagent
+gitk&
+cd "${HOME}"/src/otctl
+gitk&

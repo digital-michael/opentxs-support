@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# load configuration realitive to this script
+SCRIPT=$(readlink -f $0)
+SCRIPTPATH=`dirname $SCRIPT`
+
+CONFIG_FILE="${HOME}/.${USER}"
+
+# if the default configuration files doesn't exist, create a default
+if [ ! -e "${CONFIG_FILE}" ] 
+then
+   echo TOOLS="${HOME}/bin" > ${CONFIG_FILE}
+   echo SOURCES="${HOME}/src" >> ${CONFIG_FILE}
+   echo BUILDS="${HOME}/build" >>  ${CONFIG_FILE}
+fi
+
+# load default configuration file
+source "${CONFIG_FILE}"
+
+export JOBS="40"
+export CMAKE_C_COMPILER="/usr/bin/gcc"
+export CMAKE_CXX_COMPILER="/usr/bin/g++"
+#export CMAKE_C_COMPILER="/usr/bin/clang"
+#export CMAKE_CXX_COMPILER="/usr/bin/clang++"
+
+#export CFLAGS="-ggdb -O3"
+export CFLAGS="-ggdb -O0"
+export CXXFLAGS="${CFLAGS}"
+export LDFLAGS=""
+export CMAKE_C_FLAGS="${CFLAGS}"
+export CMAKE_CXX_FLAGS="${CFLAGS}"
+export CMAKE_SHARED_LINKER_FLAGS="${LDFLAGS}"
+export CMAKE_STATIC_LINKER_FLAGS="${LDFLAGS}"
+export CMAKE_EXE_LINKER_FLAGS="${LDFLAGS}"

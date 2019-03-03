@@ -1,0 +1,75 @@
+#!/bin/bash
+
+# load configuration realitive to this script
+SCRIPT=$(readlink -f $0)
+SCRIPTPATH=`dirname $SCRIPT`
+source "${SCRIPTPATH}"
+
+which ccache ; if [[ $? == 0 ]] ; then ccache -C -c ; fi
+which ccache-swig ; if [[ $? == 0 ]] ; then ccache-swig -C -c ; fi
+
+if [ -d "${BUILDS}"/otctl ] ; then
+	cd "${BUILDS}"/otctl
+	sudo ninja uninstall
+fi
+
+if [ -d "${BUILDS}"/otagent ] ; then
+	cd "${BUILDS}"/otagent
+	sudo ninja uninstall
+fi
+
+
+if [ -d "${BUILDS}"/bitcoin-api-cpp ] ; then
+	cd "${BUILDS}"/bitcoin-api-cpp
+	sudo ninja uninstall
+fi
+
+if [ -d "${BUILDS}"/libjson-rpc-cpp ] ; then
+	cd "${BUILDS}"/libjson-rpc-cpp
+	sudo ninja uninstall
+fi
+
+if [ -d "${BUILDS}"/jsoncpp ] ; then
+	cd "${BUILDS}"/jsoncpp
+	sudo ninja uninstall
+fi
+
+
+if [ -d "${BUILDS}"/moneychanger ] ; then
+	cd "${BUILDS}"/moneychanger
+	sudo make uninstall
+fi
+
+if [ -d "${BUILDS}"/opentxs-notary ] ; then
+	cd "${BUILDS}"/opentxs-notary
+	sudo ninja uninstall
+fi
+
+if [ -d "${BUILDS}"/opentxs-cli ] ; then
+	cd "${BUILDS}"/opentxs-cli
+	sudo ninja uninstall
+fi
+
+if [ -d "${BUILDS}"/opentxs ] ; then
+	cd "${BUILDS}"/opentxs
+	sudo ninja uninstall
+fi
+
+if [ -d "${BUILDS}"/opentxs-proto ] ; then
+	cd "${BUILDS}"/opentxs-proto
+	sudo ninja uninstall
+fi
+
+sudo rm -rf /usr/local/include/opentxs
+sudo rm -rf /usr/local/include/opentxs-proto
+
+sudo rm -rf "${BUILDS}"/otctl
+sudo rm -rf "${BUILDS}"/otagent
+sudo rm -rf "${BUILDS}"/bitcoin-api-cpp
+sudo rm -rf "${BUILDS}"/libjson-rpc-cpp
+sudo rm -rf "${BUILDS}"/jsoncpp
+sudo rm -rf "${BUILDS}"/moneychanger
+sudo rm -rf "${BUILDS}"/opentxs-notary
+sudo rm -rf "${BUILDS}"/opentxs-cli
+sudo rm -rf "${BUILDS}"/opentxs
+sudo rm -rf "${BUILDS}"/opentxs-proto

@@ -1,0 +1,30 @@
+#!/bin/bash
+
+set -e
+
+# load configuration realitive to this script
+SCRIPT=$(readlink -f $0)
+SCRIPTPATH=`dirname $SCRIPT`
+source "${SCRIPTPATH}/build"
+
+if [[ ! -d "${SOURCES}"/opentxs-proto ]] ; then
+	cd "${SOURCES}"
+	git clone -o github-ot -b develop ssh://git@github.com/open-transactions/opentxs-proto.git
+	cd opentxs-proto
+	git remote add gitlab-ot ssh://git@git.cjdns.stashcrypto.net/ot/opentxs-proto.git
+fi
+
+sudo rm -rf /usr/local/include/opentxs-proto
+mkdir -p "${BUILDS}"/opentxs-proto
+cd "${BUILDS}"/opentxs-proto
+
+cmake \
+ -GNinja \
+ -DCMAKE_BUILD_TYPE=Debug \
+ -DOT_SANITIZE=OFF \
+ -DCMAKE_C_COMPILER="${CMAKE_C_COMPILER}" \
+ -DCMAKE_CXX_COMPILER="${CMAKE_CXX_COMPILER}" \
+ "${SOURCES}"/opentxs-proto
+
+ninja
+sudo ninja install

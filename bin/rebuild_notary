@@ -1,0 +1,24 @@
+#!/bin/bash
+
+set -e
+
+# load configuration realitive to this script
+SCRIPT=$(readlink -f $0)
+SCRIPTPATH=`dirname $SCRIPT`
+source "${SCRIPTPATH}/build"
+
+if [[ ! -d "${SOURCES}"/opentxs-notary ]] ; then
+	cd "${SOURCES}"
+	git clone -o github-ot -b develop ssh://git@github.com/open-transactions/opentxs-notary.git
+	cd opentxs-notary
+	git remote add gitlab-ot ssh://git@git.cjdns.stashcrypto.net/ot/opentxs-notary.git
+fi
+
+sudo rm -rf /usr/local/bin/{createmint, opentxs-notary}
+
+mkdir -p "${BUILDS}"/opentxs-notary
+cd "${BUILDS}"/opentxs-notary
+cmake -GNinja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER="${CMAKE_C_COMPILER}" -DCMAKE_CXX_COMPILER="${CMAKE_CXX_COMPILER}" -DBUILD_TESTS=ON "${SOURCES}"/opentxs-notary
+
+ninja
+sudo ninja install

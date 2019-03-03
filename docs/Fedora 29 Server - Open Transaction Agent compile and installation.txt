@@ -1,0 +1,36 @@
+#!/usr/bin/bash
+
+#
+# OTAgent (with OTCtl) configuration, build and installation on Fedora 29 Server
+#
+
+# Dependancies: installed OpenTXS against compatible branchs
+git clone https://github.com/Open-Transactions/opentxs.git
+# OR git clone git@github.com:Open-Transactions/opentxs.git
+
+# Also assume same dependancies as opentxs though could be a subset in reality
+
+
+# Dependancies: OT CLT built and installed
+git clone https://github.com/Open-Transactions/otctl.git
+# OR git clone git@github.com:Open-Transactions/otctl.git
+
+sudo dnf install -y libjson-rpc-cpp protobuf-lite jsoncpp-devel
+
+mkdir build ; cd build 
+cmake .. 
+make -j4
+sudo make -j4 install
+
+
+
+git clone https://github.com/Open-Transactions/otagent.git
+# OR git clone git@github.com:Open-Transactions/otagent.git
+
+
+mkdir build ; cd build 
+cmake .. 
+make -j4
+# make test
+sudo make -j4 install
+

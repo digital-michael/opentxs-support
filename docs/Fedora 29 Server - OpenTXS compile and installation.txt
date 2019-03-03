@@ -1,0 +1,140 @@
+#!/usr/bin/bash
+
+#
+# Open Transaction configuration, build and installation on Fedora 29 Server
+#
+
+COMMENT_LINE_FOR_OPTIONS="echo skipping this option:"
+
+# General Dependancies
+# Reference(s): https://github.com/Open-Transactions/opentxs/blob/develop/README.md
+
+sudo dnf groupinstall Development Tools Development Libraries C Development Tools and Libraries              
+sudo dnf install -y gcc autoconf automake libtool wget cmake zlib-devel gtest-devel
+sudo dnf install -y zeromq-devel openssl-devel msgpack-devel protobuf-devel
+sudo dnf install -y sqlite boost-filesystem
+
+sudo dnf install -y libsodium-devel
+
+## Optional Documenation Builds
+${COMMENT_LINE_FOR_OPTIONS} sudo dnf install -y graphviz
+
+## Optional Performant Builds
+sudo dnf install -y ccache 
+
+## Optional Dependancies (per language binding target for OpenTXS)
+### for SWIG JAVA:   
+${COMMENT_LINE_FOR_OPTIONS} sudo dnf install -y swig ccache-swig java-1.8.0-openjdk java-1.8.0-openjdk-devel
+
+### for SWIG PERL5:  (commented out)
+# sudo dnf install -y swig ccache-swig perl-devel
+
+### for SWIG PHP:    (commented out)
+# sudo dnf install -y swig ccache-swig php-devel
+
+### for SWIG PYTHON: (commented out)
+# sudo dnf install -y swig ccache-swig python-devel
+
+### for SWIG RUBY:  (commented out) 
+# sudo dnf install -y swig ccache-swig ruby-devel
+
+### for SWIG TCL:    (commented out)
+# sudo dnf install -y swig ccache-swig tcl-devel
+
+### for SWIG CSHARP:  (commented out)
+# sudo dnf install -y swig ccache-swig monodevelop
+
+## OpenDHT-specific Dependancies:
+sudo dnf install -y readline-devel gnutls-devel msgpack-devel
+sudo dnf install -y python3-Cython python3-devel redhat-rpm-config
+
+
+
+# General Environment Configurations
+echo export NPROC=$(nproc) >> ~/.bashrc
+echo export LD_LIBRARY_PATH="/usr/local/lib:/usr/local/lib64" >> ~/.bashrc
+echo alias make="make -j${NPROC}" >> ~/.bashrc
+. ~/.bashrc
+
+## Java Environment Configurations (for SWIG JAVA option)
+${COMMENT_LINE_FOR_OPTIONS} echo export JAVA_HOME=/etc/alternatives/java_sdk >> ~/.bashrc
+${COMMENT_LINE_FOR_OPTIONS} . ~/.bashrc
+
+# Fix JNI (for SWIG JAVA option) 
+${COMMENT_LINE_FOR_OPTIONS} cd /usr/lib/jvm/java/include
+${COMMENT_LINE_FOR_OPTIONS} sudo ln -sf linux/* .
+${COMMENT_LINE_FOR_OPTIONS} cd -
+
+# Build/Create OpenDHT Support:
+# Reference: https://github.com/savoirfairelinux/opendht/blob/master/README.md
+
+git clone https://github.com/savoirfairelinux/opendht.git
+## OR for SSH: git@github.com:savoirfairelinux/opendht.git
+
+cd opendht
+mkdir build ; cd build
+cmake -DOPENDHT_PYTHON=ON -DCMAKE_INSTALL_PREFIX=/usr ..
+make -j${NPROC} # OR make -j`nproc`
+sudo make install
+
+
+# Build/Create OpenTXS-Proto Support:
+# Reference: https://github.com/Open-Transactions/opentxs-proto/blob/develop/README.md
+
+git clone https://github.com/Open-Transactions/opentxs-proto.git
+## OR for SSH: git@github.com:Open-Transactions/opentxs-proto.git
+
+cd opentxs-proto
+mkdir build ; cd build
+cmake ..
+make -j${NPROC} # OR make -j`nproc`
+sudo make install
+
+# Build/Create OpenTXS
+# Reference: https://github.com/Open-Transactions/opentxs/blob/develop/README.md
+
+git clone https://github.com/Open-Transactions/opentxs.git
+## OR for SSH: git clone git@github.com:Open-Transactions/opentxs.git
+
+cd opentxs
+
+## Optional configurations: disable bundles (commented out)
+# if [ ! -f CMakeLists.txt.orig ]; then mv CMakeLists.txt CMakeLists.txt.orig ; fi
+
+### Example only! Turn off ALL BUNDLE OPTIONS (not recommended, just an example how to toggle "ON" to "OFF") (commented out)
+#  cat CMakeLists.txt.orig |
+#  sed 's/\(.*OT_CASH_USING_LUCRE .*\) OFF/\1 ON/g' |
+#  sed 's/\(.*OT_BUNDLED_SSL .*\) OF/\1 OFF/g' |
+# ...
+#  sed 's/\(.*OT_BUNDLED_SSL .*\) ON/\1 OFF/g' |
+#  sed 's/\(.*OT_BUNDLED_PROTOBUF .*\) ON/\1 OFF/g' |
+#  sed 's/\(.*OT_BUNDLED_SODIUM .*\) ON/\1 OFF/g' |
+#  sed 's/\(.*OT_BUNDLED_SECP256K1 .*\) ON/\1 OFF/g' |
+#  sed 's/\(.*OT_BUNDLED_SQLITE .*\) ON/\1 OFF/g' |
+#  sed 's/\(.*OT_BUNDLED_LIBZMQ .*\) ON/\1 OFF/g' |
+#  sed 's/\(.*OT_BUNDLED_OPENTXS_PROTO .*\) ON/\1 OFF/g' |
+#  sed 's/\(.*OT_BUNDLED_LMDB .*\) ON/\1 OFF/g' > CMakeLists.txt
+
+## Turn on Java bindings build (commented out)
+#  if [ ! -f CMakeLists.txt.orig ]; then mv CMakeLists.txt CMakeLists.txt.orig ; fi
+#  cat CMakeLists.txt.orig |
+#  sed 's/\(.*JAVA .*\) OFF/\1 ON/g' > CMakeLists.txt
+
+## Start build
+mkdir build ; cd build
+cmake ..
+make -j${NPROC} # OR make -j`nproc`
+sudo make -j${NPROC} install
+
+
+#
+# TESTED CONFIGURATION on branch develop, 2/22/2019
+#
+# Due to the state of repo, this was the required changes to the build configuration:
+.../build/cmake 
+  -DOT_CASH_USING_LUCRE=ON 
+  -DOT_BUNDLED_SSL=OFF 
+  -DOT_BUNDLED_SODIUM=OFF 
+  -DOT_BUNDLED_OPENTXS_PROTO=OFF 
+  ..
+

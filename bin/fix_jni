@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cd /usr/lib/jvm/java/include
+sudo ln -sf linux/* .
+
