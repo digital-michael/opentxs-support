@@ -7,14 +7,17 @@ source "${SCRIPTPATH}/build"
 
 BIN_DIR="${TOOLS}"
 
+which ccache ; if [[ $? == 0 ]] ; then ccache -C -c ; fi
+which ccache-swig ; if [[ $? == 0 ]] ; then ccache-swig -C -c ; fi
+
 "${BIN_DIR}/rebuild_proto" &&
 "${BIN_DIR}/rebuild_opentxs" &&
 "${BIN_DIR}/rebuild_cli" &&
 "${BIN_DIR}/rebuild_notary" &&
-"${BIN_DIR}/rebuild_moneychanger" &&
-"${BIN_DIR}/rebuild_json" &&
-"${BIN_DIR}/rebuild_jsonrpc" &&
-"${BIN_DIR}/rebuild_bitcoinapi" &&
+# "${BIN_DIR}/rebuild_moneychanger" &&
+# "${BIN_DIR}/rebuild_json" &&
+# "${BIN_DIR}/rebuild_jsonrpc" &&
+# "${BIN_DIR}/rebuild_bitcoinapi" &&
 "${BIN_DIR}/rebuild_agent" &&
 "${BIN_DIR}/rebuild_ctl" &&
-"${BIN_DIR}/rebuild_menadel"
+# "${BIN_DIR}/rebuild_menadel"
