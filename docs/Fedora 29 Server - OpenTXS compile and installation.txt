@@ -15,6 +15,7 @@ sudo dnf install -y zeromq-devel openssl-devel msgpack-devel protobuf-devel
 sudo dnf install -y sqlite boost-filesystem
 
 sudo dnf install -y libsodium-devel
+sudo dnf install -y qt5-devel
 
 ## Optional Documenation Builds
 ${COMMENT_LINE_FOR_OPTIONS} sudo dnf install -y graphviz
