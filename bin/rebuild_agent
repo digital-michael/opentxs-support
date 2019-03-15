@@ -1,5 +1,5 @@
 #!/bin/bash
-
+MOD="${1}"
 set -e
 
 # load configuration realitive to this script
@@ -7,15 +7,15 @@ SCRIPT=$(readlink -f $0)
 SCRIPTPATH=`dirname $SCRIPT`
 source "${SCRIPTPATH}/build"
 
-if [[ ! -d "${SOURCES}"/otagent ]] ; then
+if [[ ! -d "${SOURCES}"/otagent${MOD} ]] ; then
 	cd "${SOURCES}"
-	git clone -o gitlab-ot -b master ssh://git@github.com/open-transactions/otagent.git
+	git clone -o gitlab-ot -b master ssh://git@github.com/open-transactions/otagent.git otagent${MOD}
 fi
 
-sudo rm -rf /usr/local/bin/otagent
-mkdir -p "${BUILDS}"/otagent
-cd "${BUILDS}"/otagent
-cmake -GNinja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER="${CMAKE_C_COMPILER}" -DCMAKE_CXX_COMPILER="${CMAKE_CXX_COMPILER}" "${SOURCES}"/otagent
+sudo rm -rf /usr/local/bin/otagent${MOD}
+mkdir -p "${BUILDS}"/otagent${MOD}
+cd "${BUILDS}"/otagent${MOD}
+cmake -GNinja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER="${CMAKE_C_COMPILER}" -DCMAKE_CXX_COMPILER="${CMAKE_CXX_COMPILER}" "${SOURCES}"/otagent${MOD}
 
 ninja
 sudo ninja install

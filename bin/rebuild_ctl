@@ -1,5 +1,5 @@
 #!/bin/bash
-
+MOD="${1}"
 set -e
 
 # load configuration realitive to this script
@@ -7,16 +7,16 @@ SCRIPT=$(readlink -f $0)
 SCRIPTPATH=`dirname $SCRIPT`
 source "${SCRIPTPATH}/build"
 
-if [[ ! -d "${SOURCES}"/otctl ]] ; then
+if [[ ! -d "${SOURCES}"/otctl${MOD} ]] ; then
 	cd "${SOURCES}"
-	#git clone -o gitlab-ot -b master ssh://git@github.com/open-transactions/otctl.git
-        git clone -b develop https://github.com/Open-Transactions/otctl.git
+	#git clone -o gitlab-ot -b master ssh://git@github.com/open-transactions/otctl.git otctl${MOD}
+        git clone -b develop https://github.com/Open-Transactions/otctl.git otctl${MOD}
 fi
 
-sudo rm -rf /usr/local/bin/otctl
-mkdir -p "${BUILDS}"/otctl
-cd "${BUILDS}"/otctl
-cmake -GNinja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER="${CMAKE_C_COMPILER}" -DCMAKE_CXX_COMPILER="${CMAKE_CXX_COMPILER}" "${SOURCES}"/otctl
+sudo rm -rf /usr/local/bin/otctl${MOD}
+mkdir -p "${BUILDS}"/otctl${MOD}
+cd "${BUILDS}"/otctl${MOD}
+cmake -GNinja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER="${CMAKE_C_COMPILER}" -DCMAKE_CXX_COMPILER="${CMAKE_CXX_COMPILER}" "${SOURCES}"/otctl${MOD}
 
 ninja
 sudo ninja install

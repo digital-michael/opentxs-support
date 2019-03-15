@@ -1,5 +1,5 @@
 #!/bin/bash
-
+MOD="${1}"
 set -e
 
 # load configuration realitive to this script
@@ -7,22 +7,23 @@ SCRIPT=$(readlink -f $0)
 SCRIPTPATH=`dirname $SCRIPT`
 source "${SCRIPTPATH}/build"
 
-if [[ ! -d "${SOURCES}"/opentxs ]] ; then
+if [[ ! -d "${SOURCES}"/opentxs${MOD} ]] ; then
 	cd "${SOURCES}"
-	git clone -o github-ot -b develop ssh://git@github.com/open-transactions/opentxs.git
-	cd opentxs
-	git remote add gitlab-ot ssh://git@git.cjdns.stashcrypto.net/ot/opentxs.git
+	git clone -o github-ot -b develop ssh://git@github.com/open-transactions/opentxs.git opentxs${MOD}
+	cd opentxs${MOD}
+	git remote add gitlab-ot ssh://git@git.cjdns.stashcrypto.net/ot/opentxs.git opentxs${MOD}
 fi
 
 sudo rm -rf /usr/local/include/opentxs
-mkdir -p "${BUILDS}"/opentxs
-cd "${BUILDS}"/opentxs
+mkdir -p "${BUILDS}"/opentxs${MOD}
+cd "${BUILDS}"/opentxs${MOD}
 cmake \
  -GNinja \
  -DCMAKE_BUILD_TYPE=Debug \
  -DCMAKE_C_COMPILER="${CMAKE_C_COMPILER}" \
  -DCMAKE_CXX_COMPILER="${CMAKE_CXX_COMPILER}" \
  -DCMAKE_BUILD_TYPE=Debug \
+ -DOT_WITH_QT=OFF \
  -DOT_SHARED=ON \
  -DOT_STATIC=ON \
  -DOT_SANITIZE=OFF \
@@ -46,6 +47,6 @@ cmake \
  -DOT_BUNDLED_OPENTXS_PROTO=OFF \
  -DOT_BUNDLED_SSL=OFF \
  -DOT_BUNDLED_LMDB=OFF \
- "${SOURCES}"/opentxs
+ "${SOURCES}"/opentxs${MOD}
 ninja
 sudo ninja install

@@ -1,5 +1,5 @@
 #!/bin/bash
-
+MOD="${1}"
 set -e
 
 # load configuration realitive to this script
@@ -7,16 +7,16 @@ SCRIPT=$(readlink -f $0)
 SCRIPTPATH=`dirname $SCRIPT`
 source "${SCRIPTPATH}/build"
 
-if [[ ! -d "${SOURCES}"/bitcoin-api-cpp ]] ; then
+if [[ ! -d "${SOURCES}"/bitcoin-api-cppi${MOD} ]] ; then
 	cd "${SOURCES}"
-	git clone -o github-stash ssh://git@github.com/Stash-Crypto/bitcoin-api-cpp.git
-	cd bitcoin-api-cpp
+	git clone -o github-stash ssh://git@github.com/Stash-Crypto/bitcoin-api-cpp.git bitcoin-api-cpp${MOD}
+	cd bitcoin-api-cpp${MOD}
 	git reset --hard github-stash/master
 fi
 
-mkdir -p "${BUILDS}"/bitcoin-api-cpp
-cd "${BUILDS}"/bitcoin-api-cpp
-cmake -GNinja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER="${CMAKE_C_COMPILER}" -DCMAKE_CXX_COMPILER="${CMAKE_CXX_COMPILER}" -DJSONCPP_INCLUDE_DIRS=/usr/local/include "${SOURCES}"/bitcoin-api-cpp
+mkdir -p "${BUILDS}"/bitcoin-api-cpp${MOD}
+cd "${BUILDS}"/bitcoin-api-cpp${MOD}
+cmake -GNinja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER="${CMAKE_C_COMPILER}" -DCMAKE_CXX_COMPILER="${CMAKE_CXX_COMPILER}" -DJSONCPP_INCLUDE_DIRS=/usr/local/include "${SOURCES}"/bitcoin-api-cpp${MOD}
 
 ninja
 sudo ninja install

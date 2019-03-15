@@ -1,5 +1,5 @@
 #!/bin/bash
-
+MOD="${1}"
 set -e
 
 # load configuration realitive to this script
@@ -7,15 +7,16 @@ SCRIPT=$(readlink -f $0)
 SCRIPTPATH=`dirname $SCRIPT`
 source "${SCRIPTPATH}/build"
 
-if [[ ! -d "${SOURCES}"/moneychanger ]] ; then
+if [[ ! -d "${SOURCES}"/moneychanger${MOD} ]] ; then
 	cd "${SOURCES}"
-	git clone -o github-ot -b develop ssh://git@github.com/open-transactions/moneychanger.git
-	cd moneychanger
+	git clone -o github-ot -b develop ssh://git@github.com/open-transactions/moneychanger.git moneychanger${MOD}
+	cd moneychanger${MOD}
 	git remote add gitlab-ot ssh://git@git.cjdns.stashcrypto.net/ot/moneychanger.git
 fi
 
-mkdir -p "${BUILDS}"/moneychanger
-cd "${BUILDS}"/moneychanger
-/usr/bin/qmake-qt5 CONFIG+=debug QMAKE_CC="${CMAKE_C_COMPILER}" QMAKE_CXX="${CMAKE_CXX_COMPILER}" "${SOURCES}"/moneychanger/project
+mkdir -p "${BUILDS}"/moneychanger${MOD}
+cd "${BUILDS}"/moneychanger${MOD}
+/usr/bin/qmake-qt5 CONFIG+=debug QMAKE_CC="${CMAKE_C_COMPILER}" QMAKE_CXX="${CMAKE_CXX_COMPILER}" "${SOURCES}"/moneychanger${MOD}/project
+
 make -j "${JOBS}"
 sudo make install

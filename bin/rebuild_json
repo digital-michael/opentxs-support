@@ -1,5 +1,5 @@
 #!/bin/bash
-
+MOD="${1}"
 set -e
 
 # load configuration realitive to this script
@@ -7,16 +7,16 @@ SCRIPT=$(readlink -f $0)
 SCRIPTPATH=`dirname $SCRIPT`
 source "${SCRIPTPATH}/build"
 
-if [[ ! -d "${SOURCES}"/jsoncpp ]] ; then
+if [[ ! -d "${SOURCES}"/jsoncpp${MOD} ]] ; then
 	cd "${SOURCES}"
-	git clone https://github.com/open-source-parsers/jsoncpp.git
-	cd jsoncpp
+	git clone https://github.com/open-source-parsers/jsoncpp.git jsoncpp${MOD}
+	cd jsoncpp${MOD}
 	git reset --hard 1.8.4
 fi
 
-mkdir -p "${BUILDS}"/jsoncpp
-cd "${BUILDS}"/jsoncpp
-cmake -GNinja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER="${CMAKE_C_COMPILER}" -DCMAKE_CXX_COMPILER="${CMAKE_CXX_COMPILER}" -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF -DJSONCPP_WITH_CMAKE_PACKAGE=ON -DJSONCPP_WITH_POST_BUILD_UNITTEST=OFF -DJSONCPP_WITH_TESTS=OFF -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=ON "${SOURCES}"/jsoncpp
+mkdir -p "${BUILDS}"/jsoncpp${MOD}
+cd "${BUILDS}"/jsoncpp${MOD}
+cmake -GNinja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER="${CMAKE_C_COMPILER}" -DCMAKE_CXX_COMPILER="${CMAKE_CXX_COMPILER}" -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF -DJSONCPP_WITH_CMAKE_PACKAGE=ON -DJSONCPP_WITH_POST_BUILD_UNITTEST=OFF -DJSONCPP_WITH_TESTS=OFF -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=ON "${SOURCES}"/jsoncpp${MOD}
 
 ninja
 sudo ninja install
