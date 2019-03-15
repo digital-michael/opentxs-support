@@ -11,7 +11,9 @@ if [ ! -e "${CONFIG_FILE}" ]
 then
    echo TOOLS="${HOME}/bin" > ${CONFIG_FILE}
    echo SOURCES="${HOME}/src" >> ${CONFIG_FILE}
+   echo SOURCES_RUNE="${HOME}/src2" >> ${CONFIG_FILE}
    echo BUILDS="${HOME}/build" >>  ${CONFIG_FILE}
+   echo FELGO_ROOT="${HOME}/Felgo/Felgo" >> ${CONFIG_FILE}
 fi
 
 # load default configuration file
