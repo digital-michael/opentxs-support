@@ -14,10 +14,12 @@ if [[ ! -d "${SOURCES}"/opentxs${MOD} ]] ; then
 	git remote add gitlab-ot ssh://git@git.cjdns.stashcrypto.net/ot/opentxs.git opentxs${MOD}
 fi
 
-VERSION=`cat /usr/local/lib64/opentxs/opentxsConfigVersion.cmake  | grep "set(PACKAGE_VERSION \"" | head -n 1 | cut -d\" -f 2`
-mkdir -p "${BUILDS}"/backups
-sudo zip -qr5m "${BUILDS}/backups/opentxs-${VERSION}-`date`-installed-backup.zip" /usr/local/include/opentxs /usr/local/bin/opentxs
-#sudo rm -rf /usr/local/include/opentxs
+if [ ! -d "/usr/local/include/opentxs" ] ; then
+   VERSION=`cat /usr/local/lib64/opentxs/opentxsConfigVersion.cmake  | grep "set(PACKAGE_VERSION \"" | head -n 1 | cut -d\" -f 2`
+   mkdir -p "${BUILDS}"/backups
+   sudo zip -qr5m "${BUILDS}/backups/opentxs-${VERSION}-`date`-installed-backup.zip" /usr/local/include/opentxs /usr/local/bin/opentxs /usr/local/lib/opentxs /usr/local/lib64/opentxs /usr/local/lib64/libopentxs.so /usr/local/lib64/libJOpentxs.so
+   #sudo rm -rf /usr/local/include/opentxs
+fi
 
 mkdir -p "${BUILDS}"/opentxs${MOD}
 cd "${BUILDS}"/opentxs${MOD}
