@@ -4,7 +4,7 @@ set -e
 
 # START CUSTOMIZATION ZONE - for your system
 
-#SOURCE_DIR="/storage/workspace/Employers/StashCrypto/rune/runewallet${MOD}"
+#SOURCE_DIR="/storage/workspace/Employers/StashCrypto/rune/rune_wallet${MOD}"
 #FELGO_ROOT="/opt/Felgo/Felgo"
 
 # END CUSTOMIZATION ZONE
@@ -14,7 +14,7 @@ SCRIPT=$(readlink -f $0)
 SCRIPTPATH=`dirname $SCRIPT`
 source "${SCRIPTPATH}/build"
 
-PRJ=runewallet
+PRJ=rune-wallet
 SOURCE_DIR="${SOURCES_RUNE}/${PRJ}${MOD}"
 
 if [[ ! -d "${SOURCE_DIR}" ]] ; then
@@ -33,6 +33,7 @@ ${FELGO_ROOT}/gcc_64/bin/qmake \
 INCLUDEPATH+="${FELGO_ROOT}/gcc_64/include/QtWidgets" \
 INCLUDEPATH+="${FELGO_ROOT}/gcc_64/include/Felgo"  \
 INCLUDEPATH+="${FELGO_ROOT}/gcc_64/include/QtQml" \
+INCLUDEPATH+="${FELGO_ROOT}/gcc_64/include/QtQuickTest" \
 LIBS+=-L"${FELGO_ROOT}/gcc_64/lib" \
 LIBS+=-lQt5Widgets \
 LIBS+=-lQt5Qml \

@@ -14,7 +14,11 @@ if [[ ! -d "${SOURCES}"/opentxs${MOD} ]] ; then
 	git remote add gitlab-ot ssh://git@git.cjdns.stashcrypto.net/ot/opentxs.git opentxs${MOD}
 fi
 
-sudo rm -rf /usr/local/include/opentxs
+VERSION=`cat /usr/local/lib64/opentxs/opentxsConfigVersion.cmake  | grep "set(PACKAGE_VERSION \"" | head -n 1 | cut -d\" -f 2`
+mkdir -p "${BUILDS}"/backups
+sudo zip -qr5m "${BUILDS}/backups/opentxs-${VERSION}-`date`-installed-backup.zip" /usr/local/include/opentxs /usr/local/bin/opentxs
+#sudo rm -rf /usr/local/include/opentxs
+
 mkdir -p "${BUILDS}"/opentxs${MOD}
 cd "${BUILDS}"/opentxs${MOD}
 cmake \
@@ -32,9 +36,8 @@ cmake \
  -DOT_STORAGE_FS=ON \
  -DOT_STORAGE_SQLITE=ON \
  -DOT_STORAGE_LMDB=ON \
- -DOT_DHT=ON \
+ -DOT_DHT=OFF \
  -DOT_CRYPTO_SUPPORTED_KEY_RSA=ON \
- -DJAVA=ON \
  -DOT_CRYPTO_USING_LIBBITCOIN=OFF \
  -DPYTHON=OFF \
  -DOT_ZLIB_OVERRIDE=OFF \
@@ -48,5 +51,9 @@ cmake \
  -DOT_BUNDLED_SSL=OFF \
  -DOT_BUNDLED_LMDB=OFF \
  "${SOURCES}"/opentxs${MOD}
+
+ #-DJAVA=ON \
+ #-DRPM=ON \
+
 ninja
 sudo ninja install
