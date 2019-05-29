@@ -7,7 +7,7 @@ SCRIPT=$(readlink -f $0)
 SCRIPTPATH=`dirname $SCRIPT`
 source "${SCRIPTPATH}/build"
 
-if [[ ! -d "${SOURCES}"/opentxs-protoi${MOD} ]] ; then
+if [[ ! -d "${SOURCES}"/opentxs-proto${MOD} ]] ; then
 	cd "${SOURCES}"
 	git clone -o github-ot -b develop ssh://git@github.com/open-transactions/opentxs-proto.git opentxs-proto${MOD}
 	cd opentxs-proto${MOD}

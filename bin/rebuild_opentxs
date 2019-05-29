@@ -1,11 +1,46 @@
 #!/bin/bash
-MOD="${1}"
+#MOD="${1}"
 set -e
 
 # load configuration realitive to this script
 SCRIPT=$(readlink -f $0)
 SCRIPTPATH=`dirname $SCRIPT`
 source "${SCRIPTPATH}/build"
+
+
+if [[ "${1}" = "-h" ]] || [[ "${1}" = "--help" ]] ; then
+echo "-h	--help		: This help, first position only"
+echo "-c	--continue	: Continue withouth cleaning up from prior build, first position only"
+echo "				  By deault, prior libraries, build artifacts and ccache are cleared"
+echo "-'name'			: An alternative directory to execute a build for, last position"
+echo "   Examples: "
+echo "	 './rebuild_opentxs'"      
+echo " 		uses repo directory '${SOURCES}/opentxs'"
+echo "	 './rebuld_opentxs -fork' "
+echo "		uses repo directory '${SOURCES}/opentxs-fork'"
+echo ""
+echo "OT_EXTRA			: Added to build directions from environment variable. "
+echo "   Example:"
+echo "   export OT_EXTRA=\"-DOT_WITH_QT=ON\" "
+echo ""
+echo ""
+exit
+fi
+
+if [[ "${1}" = "-c" ]] || [[ "${1}" = "--continue" ]] ; then
+  SKIP_CLEANUP=1
+  shift
+fi
+
+if [ -z "${SKIP_CLEANUP}" ]; then
+   MOD="${1}"
+   sudo ccache -c -C
+   sudo rm -rf /usr/local/include/opentxs
+   sudo rm -rf "${BUILDS}"/opentxs${MOD}
+else
+  echo "Continuing build from last build point..."
+fi
+MOD="${1}"
 
 if [[ ! -d "${SOURCES}"/opentxs${MOD} ]] ; then
 	cd "${SOURCES}"
@@ -14,12 +49,16 @@ if [[ ! -d "${SOURCES}"/opentxs${MOD} ]] ; then
 	git remote add gitlab-ot ssh://git@git.cjdns.stashcrypto.net/ot/opentxs.git opentxs${MOD}
 fi
 
-if [ ! -d "/usr/local/include/opentxs" ] ; then
-   VERSION=`cat /usr/local/lib64/opentxs/opentxsConfigVersion.cmake  | grep "set(PACKAGE_VERSION \"" | head -n 1 | cut -d\" -f 2`
-   mkdir -p "${BUILDS}"/backups
-   sudo zip -qr5m "${BUILDS}/backups/opentxs-${VERSION}-`date`-installed-backup.zip" /usr/local/include/opentxs /usr/local/bin/opentxs /usr/local/lib/opentxs /usr/local/lib64/opentxs /usr/local/lib64/libopentxs.so /usr/local/lib64/libJOpentxs.so
-   #sudo rm -rf /usr/local/include/opentxs
-fi
+#if [ ! -d "/usr/local/include/opentxs" ] ; then
+#   VERSION=`cat /usr/local/lib64/opentxs/opentxsConfigVersion.cmake  | grep "set(PACKAGE_VERSION \"" | head -n 1 | cut -d\" -f 2`
+#   mkdir -p "${BUILDS}"/backups
+#   sudo zip -qr5m "${BUILDS}/backups/opentxs-${VERSION}-`date`-installed-backup.zip" /usr/local/include/opentxs /usr/local/bin/opentxs /usr/local/lib/opentxs /usr/local/lib64/opentxs /usr/local/lib64/libopentxs.so /usr/local/lib64/libJOpentxs.so
+#else
+#   sudo ccache -c -C
+#   sudo rm -rf /usr/local/include/opentxs
+#   sudo rm -rf "${BUILDS}"/opentxs${MOD}
+#fi
+
 
 mkdir -p "${BUILDS}"/opentxs${MOD}
 cd "${BUILDS}"/opentxs${MOD}
@@ -29,7 +68,6 @@ cmake \
  -DCMAKE_C_COMPILER="${CMAKE_C_COMPILER}" \
  -DCMAKE_CXX_COMPILER="${CMAKE_CXX_COMPILER}" \
  -DCMAKE_BUILD_TYPE=Debug \
- -DOT_WITH_QT=ON \
  -DOT_SHARED=ON \
  -DOT_STATIC=ON \
  -DOT_SANITIZE=OFF \
@@ -45,14 +83,14 @@ cmake \
  -DOT_ZLIB_OVERRIDE=OFF \
  -DOT_GENERATE_PROTO=ON \
  -DOT_BUNDLED_PROTOBUF=OFF \
- -DOT_BUNDLED_SODIUM=OFF \
+ -DOT_BUNDLED_SODIUM=ON \
  -DOT_BUNDLED_SECP256K1=OFF \
  -DOT_BUNDLED_SQLITE=OFF \
  -DOT_BUNDLED_LIBZMQ=OFF \
  -DOT_BUNDLED_OPENTXS_PROTO=OFF \
  -DOT_BUNDLED_SSL=OFF \
  -DOT_BUNDLED_LMDB=OFF \
- "${SOURCES}"/opentxs${MOD}
+ ${OT_EXTRA} "${SOURCES}"/opentxs${MOD}
 
  #-DJAVA=ON \
  #-DRPM=ON \

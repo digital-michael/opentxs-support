@@ -7,7 +7,7 @@ SCRIPT=$(readlink -f $0)
 SCRIPTPATH=`dirname $SCRIPT`
 source "${SCRIPTPATH}/build"
 
-if [[ ! -d "${SOURCES}"/opentxs-clii${MOD} ]] ; then
+if [[ ! -d "${SOURCES}"/opentxs-cli${MOD} ]] ; then
 	cd "${SOURCES}"
 	git clone -o github-ot -b develop ssh://git@github.com/open-transactions/opentxs-cli.git opentxs-cli${MOD}
 	cd opentxs-cli${MOD}
@@ -18,7 +18,8 @@ sudo rm -rf /usr/local/bin/opentxs${MOD}
 mkdir -p "${BUILDS}"/opentxs-cli${MOD}
 cd "${BUILDS}"/opentxs-cli${MOD}
 
-cmake -GNinja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER="${CMAKE_C_COMPILER}" -DCMAKE_CXX_COMPILER="${CMAKE_CXX_COMPILER}" "${SOURCES}"/opentxs-cli${MOD}
+cmake -GNinja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER="${CMAKE_C_COMPILER}" -DCMAKE_CXX_COMPILER="${CMAKE_CXX_COMPILER}" \
+${OT_EXTRA} "${SOURCES}"/opentxs-cli${MOD}
 
 ninja
 sudo ninja install
