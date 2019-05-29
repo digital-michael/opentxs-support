@@ -17,6 +17,9 @@ sudo dnf install -y sqlite boost-filesystem
 sudo dnf install -y libsodium-devel
 sudo dnf install -y qt5-devel
 
+## Support for otctl
+# sudo dnf install -y jsoncpp
+
 ## Optional Documenation Builds
 ${COMMENT_LINE_FOR_OPTIONS} sudo dnf install -y graphviz
 
