@@ -1,0 +1,22 @@
+tmux vim git 
+clang ninja-build
+gtest gtest-devel valgrind
+libsodium libsodium-devel
+protobuf-devel 
+boost-devel
+zeromq-devel 
+lmdb-devel
+openssl-devel 
+qt5-qtbase-devel
+qt5-qtdeclarative-devel
+qt5-qtquickcontrols2-devel
+qt5-qtsvg-devel
+protobuf-lite-devel 
+llvm12-devel
+gnutls-devel
+msgpack-devel
+readline-devel
+libargon2-devel
+sqlite-devel
+llvm lld
+opendht
