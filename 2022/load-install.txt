@@ -1,18 +1,21 @@
-tmux vim git 
+tmux vim git
 clang ninja-build
 clang-tools-extra
 gtest gtest-devel valgrind
 libsodium libsodium-devel
-protobuf-devel 
+protobuf-devel
 boost-devel
-zeromq-devel 
+boost-json
+zeromq-devel
 lmdb-devel
-openssl-devel 
+openssl-devel
+jsoncpp-devel
+qt5-qtdeclarative-devel
 qt5-qtbase-devel
 qt5-qtdeclarative-devel
 qt5-qtquickcontrols2-devel
 qt5-qtsvg-devel
-protobuf-lite-devel 
+protobuf-lite-devel
 llvm12-devel
 gnutls-devel
 msgpack-devel
