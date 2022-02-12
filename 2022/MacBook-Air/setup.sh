@@ -26,9 +26,10 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 
 
 # BREW INSTALL
+brew tap homebrew/cask-versions
 brew install firefox
 brew install --cask cmake
 brew install xcodeclangformat
 brew install vcpkg
-brew install visual-studio
+brew install --cask visual-studio
 
