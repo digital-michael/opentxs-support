@@ -8,6 +8,11 @@ exit 0
 # SETUP SSH
 ## REF: https://knowledge.autodesk.com/support/smoke/troubleshooting/caas/sfdcarticles/sfdcarticles/Enabling-remote-SSH-login-on-Mac-OS-X.html
 
+ssh localhost # establish ~/.ssh directory
+
+#copy ed25519 into ~/.ssh
+#copy/configure ~/.ssh/config
+#chmdor 600 ~/.ssh/ed25519 keyfile
 
 # SETUP BREW
 ## https://brew.sh/
@@ -32,4 +37,22 @@ brew install --cask cmake
 brew install xcodeclangformat
 brew install vcpkg
 brew install --cask visual-studio
+
+# SETUP WORK
+cd ~
+mkdir ~/src
+cd ~/src
+set ID="digital-michael"
+git clone --recursive git@github.com:$ID/wallet.git                                                       
+git clone --recursive git@github.com:$ID/otscripts.git                                                    │
+git clone --recursive git@github.com:$ID/opentxs.git  
+
+# SETUP OTSCRIPTS
+export OT_SCRIPT_PARENT=~/src/
+PATH=${PATH}:${OT_SCRIPT_PARENT}/otscripts/
+cd otscripts
+./init
+# Edit file local
+
+
 
