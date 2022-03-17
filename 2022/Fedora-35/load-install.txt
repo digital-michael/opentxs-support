@@ -1,6 +1,7 @@
 tmux vim git
 clang ninja-build
 clang-tools-extra
+gmock-devel
 gtest gtest-devel valgrind
 libsodium libsodium-devel
 protobuf-devel
