@@ -19,6 +19,13 @@ PATH=${OT_SCRIPT_PARENT}/otscripts/:${PATH}
 echo OT_SCRIPT_PARENT=${HOME} >> ${HOME}/localrc
 echo PATH=${OT_SCRIPT_PARENT}/otscripts/:${PATH} >> ${HOME/localrc
 
+# setup for flatpak builds
+sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+sudo flatpak install flathub org.kde.Platform//5.15
+sudo flatpak install flathub org.kde.Sdk//5.15
+mkdir ~/build/metier-flatpak/
+
 echo execute: rebuild_opentxs full gcc
 echo execute: rebuild_metier gcc
+echo execute: flatpak-builder ~/build/metier-flatpak/ ~/src/metier/package/gui.flatpak.json
 
