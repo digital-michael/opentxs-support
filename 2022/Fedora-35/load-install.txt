@@ -2,7 +2,8 @@ tmux vim git
 clang ninja-build
 clang-tools-extra
 gmock-devel
-gtest gtest-devel valgrind
+gtest gtest-devel 
+valgrind
 libsodium libsodium-devel
 protobuf-devel
 boost-devel
@@ -24,3 +25,4 @@ readline-devel
 libargon2-devel
 sqlite-devel
 llvm lld
+flatpak-builder
